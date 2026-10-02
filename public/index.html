@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Writing Back — Mini Admin</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Writing Back — Mini Admin</h1>
+    <p class="hint">Простой клиент к вашему API. Всё работает через <code>fetch</code>.</p>
+  </header>
+
+  <main>
+    <!-- ТОВАРЫ -->
+    <section class="panel" id="products-panel">
+      <h2>Товары</h2>
+      <form id="product-form">
+        <input name="title" placeholder="Название" required />
+        <input name="price" type="number" placeholder="Цена" required />
+        <input name="description" placeholder="Описание" />
+        <button type="submit">Добавить</button>
+      </form>
+      <ul id="products-list" class="list"></ul>
+    </section>
+
+    <!-- ПОЛЬЗОВАТЕЛИ -->
+    <section class="panel" id="users-panel">
+      <h2>Пользователи</h2>
+      <form id="user-form">
+        <input name="name" placeholder="Имя" required />
+        <input name="email" type="email" placeholder="Email" required />
+        <input name="password" type="password" placeholder="Пароль" required />
+        <button type="submit">Добавить</button>
+      </form>
+      <ul id="users-list" class="list"></ul>
+    </section>
+
+    <!-- ЗАКАЗЫ -->
+    <section class="panel" id="orders-panel">
+      <h2>Заказы</h2>
+      <form id="order-form">
+        <input name="userId" type="number" placeholder="ID пользователя" required />
+        <input name="total" type="number" placeholder="Сумма" required />
+        <button type="submit">Создать</button>
+      </form>
+      <ul id="orders-list" class="list"></ul>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

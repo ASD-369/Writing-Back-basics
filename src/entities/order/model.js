@@ -1,17 +1,18 @@
-export class Order {
-  constructor({ id, userId, productIds, total, status }) {
-    this.id = id;
-    this.userId = userId;
-    this.productIds = productIds || [];
-    this.total = total || 0;
-    this.status = status || 'new';
-  }
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../../shared/sequelize.js';
 
-  update({ userId, productIds, total, status }) {
-    if (userId !== undefined) this.userId = userId;
-    if (productIds !== undefined) this.productIds = productIds;
-    if (total !== undefined) this.total = total;
-    if (status !== undefined) this.status = status;
-    return this;
-  }
-}
+export const Order = sequelize.define('Order', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  total: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+  status: {
+    type: DataTypes.STRING,
+    defaultValue: 'new',
+  },
+});

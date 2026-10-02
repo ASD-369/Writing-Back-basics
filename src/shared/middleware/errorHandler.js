@@ -1,5 +1,5 @@
 export const errorHandler = (err, req, res, next) => {
-
+  // Ошибки валидации Sequelize → 400
   if (err.name === 'SequelizeValidationError') {
     return res.status(400).json({
       error: 'Ошибка валидации',

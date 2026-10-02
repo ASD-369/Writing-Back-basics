@@ -1,11 +1,10 @@
 import { userRepository } from '../../entities/user/repository.js';
 
-export function createUser({ name, email }) {
-  if (!name || !email) {
-    const err = new Error('Нужны поля name и email');
+export async function createUser({ name, email, password }) {
+  if (!name || !email || !password) {
+    const err = new Error('Нужны поля name, email и password');
     err.status = 400;
     throw err;
   }
-
-  return userRepository.add({ name, email });
+  return userRepository.add({ name, email, password });
 }

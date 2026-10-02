@@ -4,35 +4,29 @@ import { createOrder } from '../features/order/createOrder.js';
 
 const router = Router();
 
-// READ ALL
-router.get('/', (req, res) => {
-  res.json(orderRepository.findAll());
+router.get('/', async (req, res) => {
+  res.json(await orderRepository.findAll());
 });
 
-// READ ONE
-router.get('/:id', (req, res) => {
-  const order = orderRepository.findById(req.params.id);
+router.get('/:id', async (req, res) => {
+  const order = await orderRepository.findById(req.params.id);
   if (!order) return res.status(404).json({ error: 'Заказ не найден' });
   res.json(order);
 });
 
-// CREATE — валидация в feature
-router.post('/', (req, res) => {
-  const order = createOrder(req.body);
+router.post('/', async (req, res) => {
+  const order = await createOrder(req.body);
   res.status(201).json(order);
 });
 
-// UPDATE
-router.put('/:id', (req, res) => {
-  const order = orderRepository.findById(req.params.id);
+router.put('/:id', async (req, res) => {
+  const order = await orderRepository.updateById(req.params.id, req.body);
   if (!order) return res.status(404).json({ error: 'Заказ не найден' });
-  order.update(req.body);
   res.json(order);
 });
 
-// DELETE
-router.delete('/:id', (req, res) => {
-  const deleted = orderRepository.removeById(req.params.id);
+router.delete('/:id', async (req, res) => {
+  const deleted = await orderRepository.removeById(req.params.id);
   if (!deleted) return res.status(404).json({ error: 'Заказ не найден' });
   res.json(deleted);
 });

@@ -1,15 +1,28 @@
-export class Product {
-  constructor({ id, title, price, description }) {
-    this.id = id;
-    this.title = title;
-    this.price = price;
-    this.description = description || '';
-  }
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../../shared/sequelize.js';
 
-  update({ title, price, description }) {
-    if (title !== undefined) this.title = title;
-    if (price !== undefined) this.price = price;
-    if (description !== undefined) this.description = description;
-    return this;
-  }
-}
+export const Product = sequelize.define('Product', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+    },
+  },
+  price: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      min: 0,
+    },
+  },
+  description: {
+    type: DataTypes.STRING,
+    defaultValue: '',
+  },
+});

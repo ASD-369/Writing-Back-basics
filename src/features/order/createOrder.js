@@ -1,11 +1,10 @@
 import { orderRepository } from '../../entities/order/repository.js';
 
-export function createOrder({ userId, productIds, total, status }) {
-  if (!userId || !productIds) {
-    const err = new Error('Нужны поля userId и productIds');
+export async function createOrder({ userId, total, status }) {
+  if (!userId) {
+    const err = new Error('Нужно поле userId');
     err.status = 400;
     throw err;
   }
-
-  return orderRepository.add({ userId, productIds, total, status });
+  return orderRepository.add({ userId, total, status });
 }

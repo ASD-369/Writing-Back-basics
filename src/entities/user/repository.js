@@ -1,32 +1,29 @@
-import { db, counters } from '../../shared/db.js';
 import { User } from './model.js';
 
 export const userRepository = {
-  findAll() {
-    return db.users;
+  async findAll() {
+    return User.findAll();
   },
 
-  findById(id) {
-    const raw = db.users.find(u => u.id === Number(id));
-    if (!raw) return null;
-    Object.setPrototypeOf(raw, User.prototype);
-    return raw;
+  async findById(id) {
+    return User.findByPk(id);
   },
 
-  add({ name, email }) {
-    const user = new User({
-      id: counters.user++,
-      name,
-      email,
-    });
-    db.users.push(user);
+  async add({ name, email, password }) {
+    return User.create({ name, email, password });
+  },
+
+  async updateById(id, patch) {
+    const user = await User.findByPk(id);
+    if (!user) return null;
+    await user.update(patch);
     return user;
   },
 
-  removeById(id) {
-    const index = db.users.findIndex(u => u.id === Number(id));
-    if (index === -1) return null;
-    const [deleted] = db.users.splice(index, 1);
-    return deleted;
+  async removeById(id) {
+    const user = await User.findByPk(id);
+    if (!user) return null;
+    await user.destroy();
+    return user;
   },
 };

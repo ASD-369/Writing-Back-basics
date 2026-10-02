@@ -4,35 +4,29 @@ import { createUser } from '../features/user/createUser.js';
 
 const router = Router();
 
-// READ ALL
-router.get('/', (req, res) => {
-  res.json(userRepository.findAll());
+router.get('/', async (req, res) => {
+  res.json(await userRepository.findAll());
 });
 
-// READ ONE
-router.get('/:id', (req, res) => {
-  const user = userRepository.findById(req.params.id);
+router.get('/:id', async (req, res) => {
+  const user = await userRepository.findById(req.params.id);
   if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
   res.json(user);
 });
 
-// CREATE — валидация в feature
-router.post('/', (req, res) => {
-  const user = createUser(req.body);
+router.post('/', async (req, res) => {
+  const user = await createUser(req.body);
   res.status(201).json(user);
 });
 
-// UPDATE
-router.put('/:id', (req, res) => {
-  const user = userRepository.findById(req.params.id);
+router.put('/:id', async (req, res) => {
+  const user = await userRepository.updateById(req.params.id, req.body);
   if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
-  user.update(req.body);
   res.json(user);
 });
 
-// DELETE
-router.delete('/:id', (req, res) => {
-  const deleted = userRepository.removeById(req.params.id);
+router.delete('/:id', async (req, res) => {
+  const deleted = await userRepository.removeById(req.params.id);
   if (!deleted) return res.status(404).json({ error: 'Пользователь не найден' });
   res.json(deleted);
 });
