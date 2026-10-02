@@ -1,35 +1,30 @@
 import { Router } from 'express';
-import { db, counters } from '../db.js';
-import { User } from '../models/User.js';
+import { userRepository } from '../entities/user/repository.js';
+import { createUser } from '../features/user/createUser.js';
 
 const router = Router();
 
 // READ ALL
 router.get('/', (req, res) => {
-  res.json(db.users);
+  res.json(userRepository.findAll());
 });
 
 // READ ONE
 router.get('/:id', (req, res) => {
-  const user = db.users.find(u => u.id === Number(req.params.id));
+  const user = userRepository.findById(req.params.id);
   if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
   res.json(user);
 });
 
-// CREATE
+// CREATE — валидация в feature
 router.post('/', (req, res) => {
-  const { name, email } = req.body;
-  if (!name || !email) {
-    return res.status(400).json({ error: 'Нужны поля name и email' });
-  }
-  const user = new User({ id: counters.user++, name, email });
-  db.users.push(user);
+  const user = createUser(req.body);
   res.status(201).json(user);
 });
 
 // UPDATE
 router.put('/:id', (req, res) => {
-  const user = db.users.find(u => u.id === Number(req.params.id));
+  const user = userRepository.findById(req.params.id);
   if (!user) return res.status(404).json({ error: 'Пользователь не найден' });
   user.update(req.body);
   res.json(user);
@@ -37,9 +32,8 @@ router.put('/:id', (req, res) => {
 
 // DELETE
 router.delete('/:id', (req, res) => {
-  const index = db.users.findIndex(u => u.id === Number(req.params.id));
-  if (index === -1) return res.status(404).json({ error: 'Пользователь не найден' });
-  const [deleted] = db.users.splice(index, 1);
+  const deleted = userRepository.removeById(req.params.id);
+  if (!deleted) return res.status(404).json({ error: 'Пользователь не найден' });
   res.json(deleted);
 });
 

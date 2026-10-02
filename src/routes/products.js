@@ -1,47 +1,39 @@
 import { Router } from 'express';
-import { db, counters } from '../db.js';
-import { Product } from '../models/Product.js';
+import { productRepository } from '../entities/product/repository.js';
+import { createProduct } from '../features/product/createProduct.js';
 
 const router = Router();
 
+// READ ALL — все товары
 router.get('/', (req, res) => {
-  res.json(db.products);
+  res.json(productRepository.findAll());
 });
 
+// READ ONE — товар по id
 router.get('/:id', (req, res) => {
-  const product = db.products.find(p => p.id === Number(req.params.id));
+  const product = productRepository.findById(req.params.id);
   if (!product) return res.status(404).json({ error: 'Товар не найден' });
   res.json(product);
 });
 
+// CREATE — создание товара (валидация в feature)
 router.post('/', (req, res) => {
-  const { title, price, description } = req.body;
-  if (!title || price === undefined) {
-    return res.status(400).json({ error: 'Нужны поля title и price' });
-  }
-  const product = new Product({
-    id: counters.product++,
-    title,
-    price,
-    description,
-  });
-  db.products.push(product);
+  const product = createProduct(req.body);
   res.status(201).json(product);
 });
 
-// UPDATE — обновить товар
+// UPDATE — обновление (findById возвращает ссылку, update меняет объект в массиве)
 router.put('/:id', (req, res) => {
-  const product = db.products.find(p => p.id === Number(req.params.id));
+  const product = productRepository.findById(req.params.id);
   if (!product) return res.status(404).json({ error: 'Товар не найден' });
   product.update(req.body);
   res.json(product);
 });
 
-// DELETE — удалить товар
+// DELETE — удаление
 router.delete('/:id', (req, res) => {
-  const index = db.products.findIndex(p => p.id === Number(req.params.id));
-  if (index === -1) return res.status(404).json({ error: 'Товар не найден' });
-  const [deleted] = db.products.splice(index, 1);
+  const deleted = productRepository.removeById(req.params.id);
+  if (!deleted) return res.status(404).json({ error: 'Товар не найден' });
   res.json(deleted);
 });
 

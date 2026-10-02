@@ -1,6 +1,12 @@
-import { Product } from './models/Product.js';
-import { User } from './models/User.js';
-import { Order } from './models/Order.js';
+// src/shared/db.js
+
+// ⚠️ Отступление от FSD: shared импортирует из entities.
+// Это сделано осознанно, чтобы сохранить работу с классами.
+// Единственный файл в shared, которому это разрешено.
+
+import { Product } from '../entities/product/model.js';
+import { User } from '../entities/user/model.js';
+import { Order } from '../entities/order/model.js';
 
 export const db = {
   products: [
